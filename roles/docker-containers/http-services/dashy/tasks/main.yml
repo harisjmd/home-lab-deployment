@@ -1,0 +1,29 @@
+---
+- name: Create Directories for Dashy
+  ansible.builtin.file:
+      path: "{{ docker_data_dir }}/{{ service_name }}/{{ dashy_container_name }}/{{ item }}"
+      state: directory
+      mode: "0755"
+  loop: "{{ dashy_dirs }}"
+
+- name: Deploy Dashy
+  docker_container:
+      name: "{{ dashy_container_name }}"
+      image: "lissy93/dashy:latest"
+      hostname: "{{ dashy_container_name }}"
+      pull: true
+      state: started
+      env:
+          "NODE_ENV": "production"
+      volumes:
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ dashy_container_name }}/data:/app"
+      restart_policy: unless-stopped
+      healthcheck:
+          test:
+              - "CMD"
+              - "node"
+              - "/app/services/healthcheck"
+          interval: 1m30s
+          timeout: 10s
+          retries: 3
+          start_period: 40s

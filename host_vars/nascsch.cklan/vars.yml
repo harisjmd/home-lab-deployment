@@ -1,0 +1,23 @@
+ansible_ssh_user: pi
+ansible_python_interpreter: /usr/bin/python3
+# ansible_host: 1.1.1.10
+
+nas_http_service_ip_range: "{{ vault_nas_http_service_ip_range }}"
+nas_http_service_net: nas-http-service
+global_dir: /srv
+docker_data_dir: '{{ global_dir }}/docker_data'
+
+# common
+common_hostname: nascsch
+common_host_location: livingroom
+
+# raspberrypi-config
+enable_ssh: 0
+enable_vnc: 0
+enable_overscan: 0
+enable_camera: 1
+enable_wifi: false
+enable_network_boot_wait: 0
+expand_rootfs: false
+raspi_reboot_timeout: 180
+gpu_mem: 32

@@ -1,0 +1,20 @@
+service_name: nextcloud
+nextcloud_ip_range: "{{ vault_nextcloud_ip_range }}"
+nextcloud_db_container_name: nas-nextcloud-db
+nextcloud_ip: "{{ vault_nextcloud_ip }}"
+nextcloud_redis_container_name: nas-nextcloud-redis
+nextcloud_container_name: nas-nextcloud-app
+nextcloud_group_user_id: "{{ vault_nextcloud_group_user_id }}"
+nextcloud_user_id: "{{ vault_nextcloud_user_id }}"
+nextcloud_mysql_root_pass: "{{ vault_nextcloud_mysql_root_pass }}"
+nextcloud_mysql_pass: "{{ vault_nextcloud_mysql_pass }}"
+nextcloud_mysql_db: "{{ vault_nextcloud_mysql_db }}"
+nextcloud_mysql_user: "{{ vault_nextcloud_mysql_user }}"
+nextcloud_trusted_proxies: "{{ vault_nextcloud_trusted_proxies }}"
+nextcloud_ddns_name: "{{ vault_nextcloud_ddns_name }}"
+
+nextcloud_dirs:
+  - html
+  - config
+  - custom_apps
+  - data

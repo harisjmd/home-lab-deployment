@@ -1,0 +1,25 @@
+---
+- name: Create Directories for Nginx Proxy Manager
+  ansible.builtin.file:
+      path: "{{ docker_data_dir }}/{{ service_name }}/{{ nginx_manager_container_name }}/{{ item }}"
+      state: directory
+      mode: "0755"
+  loop: "{{ nginx_manager_dirs }}"
+
+- name: Deploy Nginx Proxy Manager
+  docker_container:
+      name: "{{ nginx_manager_container_name }}"
+      image: "jc21/nginx-proxy-manager:latest"
+      hostname: "{{ nginx_manager_container_name }}"
+      pull: true
+      state: started
+      ports:
+          - "80:80"
+          - "443:443"
+          - "81:81"
+      env:
+          "DISABLE_IPV6": "true"
+      volumes:
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ nginx_manager_container_name }}/data:/data"
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ nginx_manager_container_name }}/ssl-store:/etc/letsencrypt"
+      restart_policy: unless-stopped

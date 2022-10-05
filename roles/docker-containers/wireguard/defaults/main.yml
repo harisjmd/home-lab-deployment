@@ -1,0 +1,7 @@
+service_name: wireguard
+wireguard_container_name: nas-wireguard
+wireguard_ddns_name: "{{ vault_wireguard_ddns_name }}"
+wireguard_port: "{{ vault_wireguard_port }}"
+wireguard_no_peers: "{{ vault_wireguard_no_peers }}"
+wireguard_dirs:
+  - config

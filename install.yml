@@ -1,0 +1,80 @@
+---
+
+- name: Prepare all hosts
+  hosts: all
+  collections:
+      - jmd_collection.home_stack
+      - community.docker
+  gather_facts: true
+  roles:
+      - role: common
+      - role: raspberrypi-config
+      - role: docker-install
+      - role: docker-containers/portainer-agent
+
+
+#############
+#    NAS    #
+#############
+
+- name: Install NAS services
+  hosts: nas
+  become: true
+  collections:
+      - community.docker
+  gather_facts: true
+  vars_files:
+      - host_vars/nascsch.cklan/secret.yml
+  roles:
+      - role: docker-containers/http-services/nginx-manager
+      - role: docker-containers/http-services/dashy
+      - role: docker-containers/http-services/pialert
+      - role: docker-containers/nextcloud
+  post_tasks:
+      - name: Create network for http-services
+        community.docker.docker_network:
+            enable_ipv6: false
+            driver: bridge
+            ipam_config:
+                - iprange: "{{ nas_http_service_ip_range }}"
+                  subnet: "{{ nas_http_service_ip_range }}"
+            ipam_driver: default
+            name: "{{ nas_http_service_net }}"
+            connected:
+                - "{{ nginx_manager_container_name }}"
+                - "{{ dashy_container_name }}"
+                - "{{ pialert_container_name }}"
+
+      - name: Associate Nginx Proxy Manager with nextcloud_internal
+        community.docker.docker_network:
+            name: nextcloud_internal
+            connected:
+                - "{{ nginx_manager_container_name }}"
+            appends: true
+
+############
+#  ACCESS  #
+############
+
+- name: Install access services
+  hosts: access
+  # become: true
+  collections:
+      - community.docker
+  gather_facts: true
+
+  roles:
+      - role: docker-containers/cloudflared-ddns
+      - role: docker-containers/wireguard
+
+
+
+############
+#  HASSIO  #
+############
+
+- name: Install Home Assistant
+  hosts: hassio.cklan
+  become: true
+  roles:
+      - role: homeassistant

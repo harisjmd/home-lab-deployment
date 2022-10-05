@@ -1,0 +1,5 @@
+service_name: cloudflared-ddns
+cloudflared_ddns_container_name: nas-cloudflared-ddns
+cloudflared_ddns_api_key: "{{ vault_cloudflared_ddns_api_key }}"
+cloudflared_ddns_zone: "{{ vault_cloudflared_ddns_zone }}"
+cloudflared_ddns_subdomain: "{{ vault_cloudflared_ddns_subdomain }}"

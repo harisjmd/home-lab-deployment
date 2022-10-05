@@ -1,0 +1,13 @@
+---
+- name: Deploy Cloudflared DDNS
+  docker_container:
+      name: "{{ cloudflared_ddns_container_name }}"
+      image: "oznu/cloudflare-ddns:latest"
+      hostname: "{{ cloudflared_ddns_container_name }}"
+      pull: true
+      state: started
+      env:
+          "API_KEY": "{{ cloudflared_ddns_api_key }}"
+          "ZONE": "{{ cloudflared_ddns_zone }}"
+          "SUBDOMAIN": "{{ cloudflared_ddns_subdomain }}"
+      restart_policy: always

@@ -1,0 +1,89 @@
+---
+- name: Create Nextcloud internal network
+  docker_network:
+      enable_ipv6: false
+      driver: bridge
+      ipam_config:
+          - iprange: "{{ nextcloud_ip_range }}"
+            subnet: "{{ nextcloud_ip_range }}"
+      ipam_driver: default
+      name: nextcloud_internal
+
+- name: Create directories for Nextcloud DB
+  ansible.builtin.file:
+      path: "{{ docker_data_dir }}/{{ service_name }}/{{ nextcloud_db_container_name }}"
+      state: directory
+      mode: "0755"
+
+- name: Deploy Nextcloud DB (MariaDB)
+  docker_container:
+      name: "{{ nextcloud_db_container_name }}"
+      image: "ghcr.io/linuxserver/mariadb:10.5.16"
+      hostname: "{{ nextcloud_db_container_name }}"
+      pull: true
+      state: started
+      env:
+          "TZ": "{{ common_timezone }}"
+          "MYSQL_ROOT_PASSWORD": "{{ nextcloud_mysql_root_pass }}"
+          "MYSQL_PASSWORD": "{{ nextcloud_mysql_pass }}"
+          "MYSQL_DATABASE": "{{ nextcloud_mysql_db }}"
+          "MYSQL_USER": "{{ nextcloud_mysql_user }}"
+          "PUID": "{{ nextcloud_user_id }}"
+          "PGID": "{{ nextcloud_group_user_id }}"
+      volumes:
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ nextcloud_db_container_name }}:/config"
+      networks:
+          - name: nextcloud_internal
+      restart_policy: unless-stopped
+
+- name: Deploy Nextcloud Redis
+  docker_container:
+      name: "{{ nextcloud_redis_container_name }}"
+      image: "redis:7.0.2"
+      hostname: "{{ nextcloud_redis_container_name }}"
+      state: started
+      pull: true
+      networks:
+          - name: nextcloud_internal
+      restart_policy: unless-stopped
+
+- name: Create directories for Nextcloud Application
+  ansible.builtin.file:
+      path: "{{ docker_data_dir }}/{{ service_name }}/{{ nextcloud_container_name }}/{{ item }}"
+      state: directory
+      mode: "0755"
+  loop: "{{ nextcloud_dirs }}"
+
+- name: Deploy Nextcloud Application
+  docker_container:
+      name: "{{ nextcloud_container_name }}"
+      image: "nextcloud:24.0.2"
+      hostname: "{{ nextcloud_container_name }}"
+      state: started
+      pull: true
+      env:
+          "TRUSTED_PROXIES": "{{ nextcloud_trusted_proxies }}"
+          "ServerName": "{{ nextcloud_ddns_name }}"
+          "MYSQL_ROOT_PASSWORD": "{{ nextcloud_mysql_root_pass }}"
+          "MYSQL_PASSWORD": "{{ nextcloud_mysql_pass }}"
+          "MYSQL_DATABASE": "{{ nextcloud_mysql_db }}"
+          "MYSQL_USER": "{{ nextcloud_mysql_user }}"
+          "MYSQL_HOST": "{{ nextcloud_db_container_name }}"
+          "REDIS_HOST": "{{ nextcloud_redis_container_name }}"
+          "VIRTUAL_HOST": "{{ nextcloud_ddns_name }}"
+          "PHP_UPLOAD_LIMIT": 16G
+          "TZ": "{{ common_timezone }}"
+          "PUID": "{{ nextcloud_user_id }}"
+          "PGID": "{{ nextcloud_group_user_id }}"
+      networks:
+          - name: nextcloud_internal
+            ipv4_address: "{{ nextcloud_ip }}"
+      restart_policy: unless-stopped
+      volumes:
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ nextcloud_container_name }}/html:/var/www/html"
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ nextcloud_container_name }}/config:/var/www/html/config"
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ nextcloud_container_name }}/custom_apps:/var/www/html/custom_apps"
+          - "{{ docker_data_dir }}/{{ service_name }}/{{ nextcloud_container_name }}/data:/var/www/html/data"
+      links:
+          - "{{ nextcloud_db_container_name }}"
+          - "{{ nextcloud_redis_container_name }}"

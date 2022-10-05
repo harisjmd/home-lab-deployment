@@ -1,0 +1,4 @@
+collections:
+  - name: https://github.com/harisjmd/home_stack.git
+    type: git
+  - name: community.docker
