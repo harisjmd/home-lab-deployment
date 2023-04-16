@@ -8,14 +8,3 @@ all:
     access:
       hosts:
         nascsch.cklan:
-        ckaccess.cklan:
-
-    main:
-      hosts:
-        hassio.cklan:
-      children:
-        nas:
-
-    backup:
-      hosts:
-        ckaccess.cklan:

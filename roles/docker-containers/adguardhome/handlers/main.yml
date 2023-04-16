@@ -1,0 +1,7 @@
+---
+- name: Restart {{ service_name }}
+  docker_container:
+    state: started
+    restart: true
+    name: "{{ adguardhome_container_name }}"
+  listen: "restart adguardhome"

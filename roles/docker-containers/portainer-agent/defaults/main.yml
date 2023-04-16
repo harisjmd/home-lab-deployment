@@ -1,3 +1,2 @@
 service_name: portainer-agent
 portainer_agent_container_name: portainer-agent
-portainer_agent_port: "{{ vault_portainer_agent_port }}"

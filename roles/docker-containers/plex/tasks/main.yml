@@ -1,0 +1,36 @@
+---
+- name: Create Config directories for Plex
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ plex_dirs }}"
+
+- name: Create Media directories for Plex
+  become: true
+  ansible.builtin.file:
+    path: "{{ plex_media_root_dir }}/{{ service_name }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ plex_media_dirs }}"
+
+- name: Deploy Plex
+  docker_container:
+    name: "{{ plex_container_name }}"
+    image: "linuxserver/plex"
+    hostname: "{{ plex_container_name }}"
+    pull: true
+    restart_policy: "unless-stopped"
+    state: started
+    network_mode: host
+    env:
+      "PUID": "{{ plex_user }}"
+      "PGID": "{{ plex_user }}"
+      "VERSION": docker
+      "PLEX_CLAIM": "{{ plex_claim }}"
+      "TZ": "{{ common_timezone }}"
+    volumes:
+      - "{{ docker_data_dir }}/{{ service_name }}/library:/config"
+      - "{{ plex_media_root_dir }}/{{ service_name }}/tvseries:/tv"
+      - "{{ plex_media_root_dir }}/{{ service_name }}/movies:/movies"

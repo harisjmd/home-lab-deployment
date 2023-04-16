@@ -1,0 +1,124 @@
+pageInfo:
+  title: CSCH Dashy
+  navLinks:
+    - title: GitHub
+      path: https://github.com/harisjmd
+    - title: Google
+      path: https://www.google.com
+appConfig:
+  theme: dracula
+  layout: auto
+  iconSize: medium
+  language: en
+  defaultOpeningMethod: newtab
+  statusCheck: true
+  statusCheckInterval: 10
+  customColors:
+    dashy-docs:
+      primary: '#f5f6f7'
+      background: '#202020'
+      background-darker: '#121212'
+sections:
+  - name: Networking
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: true
+    items:
+      - title: CSCH Router
+        icon: https://{{ local_ap_ip }}:8443/images/favicon.png
+        url: http://{{ local_ap_ip }}/Main_Login.asp
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0_1064_cschrouter
+      - title: Cyta Router
+        icon: https://icon.horse/icon/www.cyta.com.cy
+        url: http://{{ local_isp_router_ip }}/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 1_1064_cytarouter
+      - title: AK Router
+        icon: https://icon.horse/icon/www.asus.com
+        url: https://{{ local_gateway_ip }}:8443/Main_Login.asp
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 2_1064_akrouter
+      - title: TP LINK AP
+        icon: https://icon.horse/icon/www.tp-link.com
+        url: https://{{ local_tp_ap_ip }}
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 3_1064_tplinkap
+    icon: mdi-network
+  - name: Services
+    icon: mdi-toolbox-outline
+    displayData:
+      sortBy: default
+      rows: 2
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Home Assistant
+        icon: https://{{ hassio_fqdn }}/static/icons/favicon.ico
+        url: https://{{ hassio_fqdn }}/ui-lovelace-minimalist/home
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0_836_homeassistant
+      - title: NAS OMV
+        icon: https://icon.horse/icon/www.openmediavault.org
+        url: https://{{ omv_fqdn }}/
+        target: newtab
+        statusCheck: true
+        statusCheckUrl: https://{{ omv_fqdn }}/#/login
+        statusCheckAllowInsecure: true
+        id: 1_836_nasomv
+      - title: AdGuard
+        icon: https://icon.horse/icon/adguard.com
+        url: https://{{ adguard_fqdn }}/#
+        target: newtab
+        statusCheck: true
+        id: 2_836_adguard
+      - title: Portainer
+        icon: https://www.portainer.io/hubfs/crane-icon.svg
+        url: http://{{ nas_ip }}:9000/
+        target: newtab
+        statusCheck: true
+        id: 3_836_portainer
+      - title: Traefik
+        icon: https://icon.horse/icon/traefik.io
+        url: https://{{ traefik_fqdn }}.loan/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 4_836_traefik
+  - name: Devices
+    icon: mdi-cellphone-link
+    displayData:
+      sortBy: most-used
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Ender3 V2
+        icon: https://icon.horse/icon/octoprint.org
+        url: http://{{ local_printer_ip }}/
+        target: newtab
+        statusCheck: true
+        statusCheckAllowInsecure: true
+        id: 0_707_enderv
+      - title: WLED TV
+        icon: https://icon.horse/icon/kno.wled.ge
+        url: http://{{ local_wled_ip }}/
+        target: newtab
+        statusCheckAllowInsecure: true
+        statusCheck: true
+        id: 1_707_wledtv

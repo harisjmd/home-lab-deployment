@@ -1,5 +1,0 @@
-service_name: nginx-manager
-nginx_manager_container_name: nas-nginx-manager
-nginx_manager_dirs:
-  - data
-  - ssl-store

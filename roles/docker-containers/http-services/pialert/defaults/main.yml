@@ -1,4 +1,0 @@
-service_name: pialert
-pialert_container_name: nas-pialert
-pialert_dirs:
-  - config

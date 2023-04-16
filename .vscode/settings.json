@@ -1,0 +1,11 @@
+{
+ "editor.defaultFormatter": "redhat.ansible",
+ "[ansible]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+ },
+ "prettier.tabWidth": 2,
+ "[xml]": {
+  "editor.defaultFormatter": "redhat.vscode-xml"
+ },
+
+}

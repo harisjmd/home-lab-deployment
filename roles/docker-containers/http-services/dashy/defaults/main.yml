@@ -1,4 +1,2 @@
 service_name: dashy
-dashy_container_name: nas-dashy
-dashy_dirs:
-  - data
+dashy_container_name: dashy

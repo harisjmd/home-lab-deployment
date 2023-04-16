@@ -1,0 +1,54 @@
+http:
+  routers:
+    hassio:
+      entryPoints:
+        - websecure
+      service: hassio
+      rule: Host(`{{ hassio_fqdn }}`)
+      tls:
+        certresolver: cloudflared
+    omv:
+      entryPoints:
+        - websecure
+      middlewares:
+        - omv-ipwhitelist
+        - omv-redirect
+      service: omv
+      rule: Host(`{{ omv_fqdn }}`)
+      tls:
+        certresolver: cloudflared
+
+    traefik-dashboard:
+      entryPoints:
+        - websecure
+      middlewares:
+        - omv-ipwhitelist
+        - omv-redirect
+      service: api@internal
+      rule: Host(`{{ traefik_fqdn }}`)
+      tls:
+        certresolver: cloudflared
+
+  middlewares:
+    omv-ipwhitelist:
+      ipwhitelist:
+        sourcerange: {{ traefik_serv_src_ips }}
+    omv-redirect:
+      redirectscheme:
+        permanent: true
+        scheme: https
+    gauth:
+      basicauth:
+        usersfile: /etc/traefik/.pass
+
+  # Add the service
+  services:
+    hassio:
+      loadBalancer:
+        servers:
+          - url: {{ traefik_serv_hassio_url }}
+    omv:
+      loadBalancer:
+        servers:
+          - url: {{ traefik_serv_omv_url }}
+    

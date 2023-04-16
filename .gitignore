@@ -1,2 +1,6 @@
 .DS_Store
 */*/secret.yml
+/.idea
+out.log
+secret.yml
+vault.yml
