@@ -1,8 +1,7 @@
 ansible_ssh_user: pi
 ansible_python_interpreter: /usr/bin/python3
-ansible_host: "192.168.2.250"
+ansible_host: "{{ vault_nas_ip }}"
 
-nas_proxy_net_ip_range: "{{ vault_nas_proxy_net_ip_range }}"
 nas_proxy_net: proxy_net
 global_dir: "{{ vault_nas_global_dir }}"
 docker_data_dir: "{{ global_dir }}/docker-volumes"
@@ -26,10 +25,8 @@ gpu_mem: 32
 # omv
 omv_port: "{{ vault_omv_port }}"
 
-# wireguard
-wireguard_subnet: "{{ vault_wireguard_subnet }}"
-
-# dashy
+# adguard
+adguard_fqdn: "{{ vault_adguard2_fqdn }}"
 
 # nextcloud
 nextcloud_subnet: "{{ vault_nextcloud_subnet }}"
@@ -46,10 +43,6 @@ nextcloud_trusted_proxies: "{{ nextcloud_subnet }},{{ wireguard_subnet }}"
 cloudflared_ddns_api_key: "{{ vault_cloudflared_ddns_api_key }}"
 cloudflared_ddns_zone: "{{ external_domain }}"
 cloudflared_ddns_subdomain: "{{ vault_cloudflared_ddns_subdomain }}"
-
-# adguard
-adguard_user: "{{ vault_adguard_user }}"
-adguard_password: "{{ vault_adguard_password }}"
 
 # traefik
 traefik_cf_email: "{{ vault_traefik_cf_email }}"

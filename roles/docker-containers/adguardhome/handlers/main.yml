@@ -5,3 +5,17 @@
     restart: true
     name: "{{ adguardhome_container_name }}"
   listen: "restart adguardhome"
+
+- name: Reload systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: reloaded
+  become: true
+  listen: "reload systemd"
+
+- name: Restart systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+  become: true
+  listen: "restart systemd"
