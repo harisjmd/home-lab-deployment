@@ -5,12 +5,27 @@
     - jmd_collection.home_stack
     - community.docker
   gather_facts: true
+  vars_files:
+    - ./secret.yml
   roles:
     - role: common
     - role: raspberrypi-config
     - role: docker-install
     - role: docker-containers/portainer-agent
+  tags:
+    - core
 
+- name: Install DNS servers
+  hosts: dns
+  collections:
+    - community.docker
+  gather_facts: true
+  vars_files:
+    - ./secret.yml
+  roles:
+    - role: docker-containers/adguardhome
+  tags:
+    - dns
 #############
 #    NAS    #
 #############
@@ -20,13 +35,12 @@
   become: true
   collections:
     - community.docker
-  gather_facts: true
+  gather_facts: false
   vars_files:
     - ./secret.yml
   roles:
     - role: docker-containers/plex
     - role: docker-containers/nextcloud
-    - role: docker-containers/adguardhome
     - role: docker-containers/cloudflared-ddns
     - role: docker-containers/portainer-agent
     - role: docker-containers/http-services/dashy
@@ -51,12 +65,14 @@
         - "restart dashy"
         - "restart adguardhome"
         - "restart traefik"
+
 ############
 #  HASSIO  #
 ############
 
 - name: Install Home Assistant
-  hosts: hassio.cklan
+  hosts: hassio
+  gather_facts: false
   become: true
   roles:
     - role: homeassistant

@@ -16,25 +16,40 @@
     dest: "{{ docker_data_dir }}/{{ service_name }}/{{ adguardhome_container_name }}/config/AdGuardHome.yaml"
     mode: "0755"
 
-- name: Deploy Configuration file AdGuardHome.yaml
+- name: Deploy resolved.conf changes
   become: true
   ansible.builtin.template:
     backup: true
     src: "resolved.conf.j2"
     dest: "/etc/systemd/resolved.conf"
     mode: "0755"
+  notify:
+    - "reload systemd"
+    - "restart systemd"
 
 - name: Deploy AdGuard Home
   docker_container:
     name: "{{ adguardhome_container_name }}"
-    image: "adguard/adguardhome:v0.107.13"
+    image: "adguard/adguardhome:v0.107.29"
     hostname: "{{ adguardhome_container_name }}"
     pull: true
     restart_policy: "unless-stopped"
     state: started
     ports:
+      - "{{ adguard_http_port }}:80"
+      - "{{ adguard_https_port }}:443"
       - "53:53/udp"
       - "53:53/tcp"
     volumes:
       - "{{ docker_data_dir }}/{{ service_name }}/{{ adguardhome_container_name }}/config:/opt/adguardhome/conf"
       - "{{ docker_data_dir }}/{{ service_name }}/{{ adguardhome_container_name }}/workdir:/opt/adguardhome/work"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.adguard-ipwhitelist.ipwhitelist.sourcerange: "{{ traefik_serv_src_ips }}"
+      traefik.http.routers.adguard.entrypoints: "websecure"
+      traefik.http.routers.adguard.middlewares: "adguard-ipwhitelist"
+      traefik.http.routers.adguard.rule: Host(`{{ adguard_fqdn }}`)
+      traefik.http.routers.adguard.service: "adguard"
+      traefik.http.routers.adguard.tls: "true"
+      traefik.http.routers.adguard.tls.certresolver: "cloudflared"
+      traefik.http.services.adguard.loadbalancer.server.port: "80"
