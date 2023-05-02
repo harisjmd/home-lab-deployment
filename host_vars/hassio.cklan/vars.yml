@@ -1,13 +1,13 @@
 ansible_ssh_user: pi
 ansible_python_interpreter: /usr/bin/python3
-# ansible_host: 1.1.1.10
+ansible_host: "{{ vault_hassio_ip }}"
 
 # common
-common_hostname: hassio
+common_hostname: "{{ vault_hassio_hostname }}"
 common_host_location: office
 
 # raspberrypi-config
-enable_ssh: 0 
+enable_ssh: 0
 enable_vnc: 1
 enable_overscan: 0
 enable_camera: 1

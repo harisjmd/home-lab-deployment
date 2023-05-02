@@ -1,0 +1,55 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false # true by default
+
+api:
+  dashboard: true # true by default
+  insecure: true # Don't do this in production!
+
+# Entry Points configuration
+# ---
+entryPoints:
+  web:
+    address: :80
+
+  websecure:
+    address: :443
+
+certificatesResolvers:
+  staging:
+    acme:
+      email: {{ vault_traefik_cf_email }}
+      storage: /ssl-certs/acme.json
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+
+  cloudflared:
+    acme:
+      email: {{ vault_traefik_cf_email }}
+      storage: /ssl-certs/acme.json
+      keyType: "RSA4096"
+      certificatesDuration: 2160
+      dnsChallenge:
+        provider: "cloudflare"
+        delayBeforeCheck: "5"
+
+  production:
+    acme:
+      email: {{ vault_traefik_cf_email }}
+      storage: /ssl-certs/acme.json
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+
+providers:
+  docker:
+    exposedByDefault: false # Default is true
+    endpoint: "unix:///var/run/docker.sock"
+    swarmMode: false
+    network: "{{ nas_proxy_net }}"
+  file:
+    directory: /etc/traefik/dynamic-conf
+    watch: true
+log:
+  level: DEBUG

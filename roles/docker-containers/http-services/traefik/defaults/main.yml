@@ -1,0 +1,7 @@
+service_name: traefik
+traefik_container_name: traefik
+traefik_version: v2.9.6
+traefik_dirs:
+  - config
+  - config/dynamic-conf
+  - ssl-certs

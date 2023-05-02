@@ -1,5 +1,5 @@
 service_name: homeassistant
-hassio_dir:  '{{ global_dir }}/hassio'
+hassio_dir: '{{ global_dir }}/hassio'
 hassio_apparmor_boot: "apparmor=1 security=apparmor systemd.unified_cgroup_hierarchy=false lsm=apparmor"
 hassio_agent_vwrsion: "1.3.0"
 hassio_deps_packages:

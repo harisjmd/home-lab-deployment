@@ -1,8 +1,43 @@
+## global ##
+global_dir: /opt
+docker_data_dir: "{{ global_dir }}/docker_data"
+local_dns: "{{ vault_local_dns }}"
+common_dns: "{{ local_dns }}"
+local_domain: "{{ vault_local_domain }}"
+local_subnet: "{{ vault_local_subnet }}"
+local_gateway_ip: "{{ vault_local_gateway_ip }}"
+local_ap_ip: "{{ vault_local_ap_ip }}"
+local_tp_ap_ip: "{{ vault_local_tp_ap_ip }}"
+local_isp_router_ip: "{{ vault_local_isp_router_ip }}"
+local_printer_ip: "{{ vault_local_printer_ip }}"
+local_wled_ip: "{{ vault_local_wled_ip }}"
+local_proxy_ip: "{{ vault_local_proxy_ip }}"
+external_domain: "{{ vault_external_domain }}"
+
+# common
 common_locale: en_GB.UTF-8
 common_timezone: Asia/Nicosia
 common_host_icon: network-server
 common_host_chassis: server
 common_host_deployment: production
-global_dir: /opt
-docker_data_dir: '{{ global_dir }}/docker_data'
-common_dns: 1.1.1.1
+
+# services
+traefik_fqdn: "{{ vault_traefik_fqdn }}"
+nextcloud_fqdn: "{{ vault_nextcloud_fqdn }}"
+adguard1_fqdn: "{{ vault_adguard1_fqdn }}"
+adguard2_fqdn: "{{ vault_adguard2_fqdn }}"
+dashy_fqdn: "{{ vault_dashy_fqdn }}"
+omv_fqdn: "{{ vault_omv_fqdn }}"
+hassio_fqdn: "{{ vault_hassio_fqdn }}"
+portainer_agent_port: "{{ vault_portainer_agent_port }}"
+
+# dns
+adguard_user: "{{ vault_adguard_user }}"
+adguard_password: "{{ vault_adguard_password }}"
+
+# wireguard
+wireguard_subnet: "{{ vault_wireguard_subnet }}"
+
+# proxy
+nas_proxy_net_ip_range: "{{ vault_nas_proxy_net_ip_range }}"
+traefik_serv_src_ips: "127.0.0.1/32,{{ local_subnet }},{{ nas_proxy_net_ip_range }},{{ wireguard_subnet }}"

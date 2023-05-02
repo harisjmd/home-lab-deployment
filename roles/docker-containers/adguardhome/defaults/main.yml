@@ -1,0 +1,8 @@
+service_name: adguardhome
+adguardhome_container_name: ad-guard-home
+adguardhome_http_dns_port: 8888
+adguardhome_https_dns_port: 8843
+adguardhome_web_port: 3000
+adguardhome_dirs:
+  - config
+  - workdir

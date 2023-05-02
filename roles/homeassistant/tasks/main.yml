@@ -1,94 +1,92 @@
 ---
 - name: Create Directories for Home Assistant
   ansible.builtin.file:
-      path: "{{ hassio_dir }}"
-      state: directory
-      mode: "0755"
+    path: "{{ hassio_dir }}"
+    state: directory
+    mode: "0755"
 
 - name: Install Home Assistant Deps
   become: true
   ansible.builtin.apt:
-      name: "{{ hassio_deps_packages }}"
-      state: present
+    name: "{{ hassio_deps_packages }}"
+    state: present
 
 - name: Read /boot/cmdline.txt"
   become: true
   ansible.builtin.shell:
-      cmd: "sed -n 1p /boot/cmdline.txt"
+    cmd: "sed -n 1p /boot/cmdline.txt"
   register: existing_conf
   changed_when: false
 
 - name: Replace content of /boot/cmdline.txt"
   become: true
   ansible.builtin.replace:
-      regexp: "{{ existing_conf.stdout }}"
-      replace: "{{ existing_conf.stdout }} {{ hassio_apparmor_boot }}"
-      path: "/boot/cmdline.txt"
-      backup: false
+    regexp: "{{ existing_conf.stdout }}"
+    replace: "{{ existing_conf.stdout }} {{ hassio_apparmor_boot }}"
+    path: "/boot/cmdline.txt"
+    backup: false
 
 - name: Reboot Raspberry pi
   become: true
   ansible.builtin.reboot:
-      reboot_timeout: 180
+    reboot_timeout: 180
 
 - name: Verify AppArmor is installed
   become: true
   ansible.builtin.command:
-      argv: "aa-status"
+    argv: "aa-status"
   register: app_armor_out
   changed_when: false
 
 - name: Print AppArmor installation verify
   ansible.builtin.debug:
-      var: app_armor_out.stdout_lines
-
+    var: app_armor_out.stdout_lines
 
 - name: Fix any broken packages apt
   become: true
   ansible.builtin.apt:
-      state: fixed
+    state: fixed
 
 - name: Download OS agent DEB
   ansible.builtin.uri:
-      url: "https://github.com/home-assistant/os-agent/releases/download/{{ hassio_agent_vwrsion }}/os-agent_{{ hassio_agent_vwrsion }}_linux_aarch64.deb"
-      dest: "{{ hassio_dir }}/osagent-{{ hassio_agent_vwrsion }}.deb"
-      status_code:
-          - 200
-          - 304
+    url: "https://github.com/home-assistant/os-agent/releases/download/{{ hassio_agent_vwrsion }}/os-agent_{{ hassio_agent_vwrsion }}_linux_aarch64.deb"
+    dest: "{{ hassio_dir }}/osagent-{{ hassio_agent_vwrsion }}.deb"
+    status_code:
+      - 200
+      - 304
 
 - name: Install OS agent DEB
   become: true
   ansible.builtin.apt:
-      deb: "{{ hassio_dir }}/osagent-{{ hassio_agent_vwrsion }}.deb"
+    deb: "{{ hassio_dir }}/osagent-{{ hassio_agent_vwrsion }}.deb"
 
 - name: Verify OS agent installation
   become: true
   ansible.builtin.command:
-      argv:
-          - "gdbus"
-          - "introspect"
-          - "--system"
-          - "--dest"
-          - "io.hass.os"
-          - "--object-path"
-          - "/io/hass/os"
+    argv:
+      - "gdbus"
+      - "introspect"
+      - "--system"
+      - "--dest"
+      - "io.hass.os"
+      - "--object-path"
+      - "/io/hass/os"
   register: osagent_out
 
 - name: Print OS Agent installation verify
   ansible.builtin.debug:
-      var: osagent_out.stdout_lines
-
+    var: osagent_out.stdout_lines
 
 - name: Download Home Assistant DEB
   ansible.builtin.uri:
-      url: "https://github.com/home-assistant/supervised-installer/releases/latest/download/homeassistant-supervised.deb"
-      dest: "{{ hassio_dir }}/homeassistant.deb"
-      status_code:
-          - 200
-          - 304
+    url: "https://github.com/home-assistant/supervised-installer/releases/latest/download/homeassistant-supervised.deb"
+    dest: "{{ hassio_dir }}/homeassistant.deb"
+    status_code:
+      - 200
+      - 304
 
 - name: Install Home Assistant DEB
   become: true
   ansible.builtin.apt:
-      deb: "{{ hassio_dir }}/homeassistant.deb"
-      state: present
+    deb: "{{ hassio_dir }}/homeassistant.deb"
+    state: present

@@ -1,0 +1,21 @@
+---
+- name: Restart {{ nextcloud_container_name }}
+  docker_container:
+    state: started
+    restart: true
+    name: "{{ nextcloud_container_name }}"
+  listen: "restart nextcloud"
+
+- name: Restart {{ nextcloud_db_container_name }}
+  docker_container:
+    state: started
+    restart: true
+    name: "{{ nextcloud_db_container_name }}"
+  listen: "restart nextcloud-db"
+
+- name: Restart {{ nextcloud_redis_container_name }}
+  docker_container:
+    state: started
+    restart: true
+    name: "{{ nextcloud_redis_container_namee }}"
+  listen: "restart nextcloud-redis"

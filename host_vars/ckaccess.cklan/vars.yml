@@ -1,18 +1,23 @@
 ansible_ssh_user: pi
 ansible_python_interpreter: /usr/bin/python3
-# ansible_host: 1.1.1.10
+ansible_host: "{{ vault_ckaccess_ip }}"
 
 # common
-common_hostname: ckaccess
+common_hostname: "{{ vault_ckaccess_hostname }}"
 common_host_location: office
 
 # raspberrypi-config
 enable_ssh: 0
-enable_vnc: 1
+enable_vnc: 0
 enable_overscan: 0
 enable_camera: 1
 enable_wifi: false
 enable_network_boot_wait: 0
-expand_rootfs: false
-raspi_reboot_timeout: 360
+expand_rootfs: true
+raspi_reboot_timeout: 240
 gpu_mem: 32
+
+# adguard
+adguard_http_port: "{{ vault_adguard_http_port }}"
+adguard_https_port: "{{ vault_adguard_https_port }}"
+adguard_fqdn: "{{ vault_adguard1_fqdn }}"

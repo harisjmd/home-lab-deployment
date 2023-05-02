@@ -4,18 +4,16 @@ all:
     nas:
       hosts:
         nascsch.cklan:
-        
-    access:
+
+    vpn:
       hosts:
         nascsch.cklan:
         ckaccess.cklan:
 
-    main:
+    dns:
+      hosts:
+        nascsch.cklan:
+        ckaccess.cklan:
+    hassio:
       hosts:
         hassio.cklan:
-      children:
-        nas:
-
-    backup:
-      hosts:
-        ckaccess.cklan:

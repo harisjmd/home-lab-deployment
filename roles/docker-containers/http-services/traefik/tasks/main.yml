@@ -1,0 +1,56 @@
+---
+- name: Create Directories for {{ service_name }}
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ traefik_dirs }}"
+  register: result
+
+- name: Configure traefik.yml main config
+  become: true
+  ansible.builtin.template:
+    backup: true
+    src: "traefik.yml.j2"
+    dest: "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/config/traefik.yml"
+    mode: "0755"
+  notify: "restart traefik"
+
+- name: Configure manual.yml config
+  become: true
+  ansible.builtin.template:
+    backup: true
+    src: "manual.yml.j2"
+    dest: "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/config/dynamic-conf/manual.yml"
+    mode: "0755"
+  when: result is succeeded
+  notify: "restart traefik"
+
+- name: Configure .pass
+  become: true
+  ansible.builtin.template:
+    backup: true
+    src: ".pass.j2"
+    dest: "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/config/.pass"
+    mode: "0755"
+  when: result is succeeded
+  notify: "restart traefik"
+
+- name: Deploy {{ service_name }}
+  docker_container:
+    name: "{{ traefik_container_name }}"
+    image: "traefik:{{ traefik_version }}"
+    hostname: "{{ traefik_container_name }}"
+    pull: true
+    state: started
+    ports:
+      - "80:80"
+      - "443:443"
+    env:
+      "CF_API_EMAIL": "{{ traefik_cf_email }}"
+      "CF_DNS_API_TOKEN": "{{ traefik_cf_dns_api_token }}"
+    volumes:
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/config:/etc/traefik"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/ssl-certs:/ssl-certs"
+    restart_policy: unless-stopped

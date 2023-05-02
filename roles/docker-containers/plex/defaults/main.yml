@@ -1,0 +1,8 @@
+service_name: plex
+plex_container_name: plex
+plex_dirs:
+  - library
+plex_user: "1000"
+plex_media_dirs:
+  - tvseries
+  - movies

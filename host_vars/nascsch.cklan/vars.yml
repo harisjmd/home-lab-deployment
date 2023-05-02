@@ -1,14 +1,12 @@
 ansible_ssh_user: pi
 ansible_python_interpreter: /usr/bin/python3
-# ansible_host: 1.1.1.10
+ansible_host: "{{ vault_nas_ip }}"
 
-nas_http_service_ip_range: "{{ vault_nas_http_service_ip_range }}"
-nas_http_service_net: nas-http-service
-global_dir: /srv
-docker_data_dir: '{{ global_dir }}/docker_data'
+nas_proxy_net: proxy_net
+nas_ip: "{{ vault_nas_ip }}"
 
 # common
-common_hostname: nascsch
+common_hostname: "{{ vault_nas_hostname }}"
 common_host_location: livingroom
 
 # raspberrypi-config
@@ -21,3 +19,39 @@ enable_network_boot_wait: 0
 expand_rootfs: false
 raspi_reboot_timeout: 180
 gpu_mem: 32
+
+# omv
+omv_port: "{{ vault_omv_port }}"
+
+# adguard
+adguard_fqdn: "{{ vault_adguard2_fqdn }}"
+adguard_http_port: "{{ vault_adguard_http_port }}"
+adguard_https_port: "{{ vault_adguard_https_port }}"
+
+# nextcloud
+nextcloud_subnet: "{{ vault_nextcloud_subnet }}"
+nextcloud_ip: "{{ vault_nextcloud_ip }}"
+nextcloud_group_user_id: "{{ vault_nextcloud_group_user_id }}"
+nextcloud_user_id: "{{ vault_nextcloud_user_id }}"
+nextcloud_mysql_root_pass: "{{ vault_nextcloud_mysql_root_pass }}"
+nextcloud_mysql_pass: "{{ vault_nextcloud_mysql_pass }}"
+nextcloud_mysql_db: "{{ vault_nextcloud_mysql_db }}"
+nextcloud_mysql_user: "{{ vault_nextcloud_mysql_user }}"
+nextcloud_trusted_proxies: "{{ nextcloud_subnet }},{{ wireguard_subnet }}"
+
+# cloudflared
+cloudflared_ddns_api_key: "{{ vault_cloudflared_ddns_api_key }}"
+cloudflared_ddns_zone: "{{ external_domain }}"
+cloudflared_ddns_subdomain: "{{ vault_cloudflared_ddns_subdomain }}"
+
+# traefik
+traefik_cf_email: "{{ vault_traefik_cf_email }}"
+traefik_cf_dns_api_token: "{{ vault_traefik_cf_dns_api_token }}"
+traefik_serv_hassio_url: "http://{{ vault_hassio_ip }}:{{ vault_hassio_port }}"
+traefik_serv_omv_url: "http://{{ vault_nas_ip }}:{{ omv_port }}"
+traefik_serv_src_ips: "127.0.0.1/32,{{ local_subnet }},{{ nas_proxy_net_ip_range }},{{ wireguard_subnet }}"
+traefik_auth: "{{ vault_traefik_auth }}"
+
+# plex
+plex_claim: "{{ vault_plex_claim }}"
+plex_media_root_dir: "{{ vault_plex_media_root_dir }}"
