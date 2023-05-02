@@ -42,7 +42,7 @@
     - role: docker-containers/plex
     - role: docker-containers/nextcloud
     - role: docker-containers/cloudflared-ddns
-    - role: docker-containers/portainer-agent
+    - role: docker-containers/adguardhome
     - role: docker-containers/http-services/dashy
     - role: docker-containers/http-services/traefik
   post_tasks:

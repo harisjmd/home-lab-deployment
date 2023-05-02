@@ -3,8 +3,6 @@ ansible_python_interpreter: /usr/bin/python3
 ansible_host: "{{ vault_nas_ip }}"
 
 nas_proxy_net: proxy_net
-global_dir: "{{ vault_nas_global_dir }}"
-docker_data_dir: "{{ global_dir }}/docker-volumes"
 nas_ip: "{{ vault_nas_ip }}"
 
 # common
@@ -27,6 +25,8 @@ omv_port: "{{ vault_omv_port }}"
 
 # adguard
 adguard_fqdn: "{{ vault_adguard2_fqdn }}"
+adguard_http_port: "{{ vault_adguard_http_port }}"
+adguard_https_port: "{{ vault_adguard_https_port }}"
 
 # nextcloud
 nextcloud_subnet: "{{ vault_nextcloud_subnet }}"
