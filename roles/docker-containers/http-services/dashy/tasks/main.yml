@@ -22,18 +22,18 @@
     env:
       "NODE_ENV": "production"
     labels:
-      traefik.enable: true
-      traefik.http.middlewares.dashy-redirect.redirectscheme.permanent: true
-      traefik.http.middlewares.dashy-redirect.redirectscheme.scheme: https
-      traefik.http.routers.dashy.entrypoints: websecure
-      traefik.http.routers.dashy.middlewares: dashy-redirect,dashy-ipwhitelist,gauth@file
+      traefik.enable: "true"
+      traefik.http.middlewares.dashy-redirect.redirectscheme.permanent: "true"
+      traefik.http.middlewares.dashy-redirect.redirectscheme.scheme: "https"
+      traefik.http.routers.dashy.entrypoints: "websecure"
+      traefik.http.routers.dashy.middlewares: "dashy-redirect,dashy-ipwhitelist,gauth@file"
       traefik.http.routers.dashy.rule: Host(`{{ dashy_fqdn }}`)
-      traefik.http.routers.dashy.service: dashy
-      traefik.http.routers.dashy.tls: true
-      traefik.http.routers.dashy.tls.certresolver: cloudflared
+      traefik.http.routers.dashy.service: "dashy"
+      traefik.http.routers.dashy.tls: "true"
+      traefik.http.routers.dashy.tls.certresolver: "cloudflared"
       traefik.http.middlewares.dashy-ipwhitelist.ipwhitelist.sourcerange: "{{ traefik_serv_src_ips }}"
-      traefik.http.services.dashy.loadbalancer.server.port: 80
-      traefik.http.services.dashy.loadbalancer.passhostheader: true
+      traefik.http.services.dashy.loadbalancer.server.port: "80"
+      traefik.http.services.dashy.loadbalancer.passhostheader: "true"
     volumes:
       - "{{ docker_data_dir }}/{{ service_name }}/conf.yml:/app/public/conf.yml"
     restart_policy: unless-stopped

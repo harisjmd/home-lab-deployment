@@ -50,7 +50,7 @@
       "CF_API_EMAIL": "{{ traefik_cf_email }}"
       "CF_DNS_API_TOKEN": "{{ traefik_cf_dns_api_token }}"
     volumes:
-      - "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/data:/data"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/config:/etc/traefik"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/ssl-store:/etc/letsencrypt"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ traefik_container_name }}/ssl-certs:/ssl-certs"
     restart_policy: unless-stopped
