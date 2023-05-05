@@ -45,6 +45,8 @@
     - role: docker-containers/adguardhome
     - role: docker-containers/http-services/dashy
     - role: docker-containers/http-services/traefik
+      tags:
+        - proxy
   post_tasks:
     - name: Create network for http-services
       community.docker.docker_network:
@@ -60,12 +62,8 @@
           - "{{ dashy_container_name }}"
           - "{{ adguardhome_container_name }}"
           - "{{ traefik_container_name }}"
-      notify:
-        - "restart nextcloud"
-        - "restart dashy"
-        - "restart adguardhome"
-        - "restart traefik"
-
+      tags:
+        - proxy
 ############
 #  HASSIO  #
 ############
