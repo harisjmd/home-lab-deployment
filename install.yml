@@ -43,6 +43,7 @@
     - role: docker-containers/nextcloud
     - role: docker-containers/cloudflared-ddns
     - role: docker-containers/adguardhome
+    - role: docker-containers/portainer
     - role: docker-containers/http-services/dashy
     - role: docker-containers/http-services/traefik
       tags:
@@ -61,6 +62,7 @@
           - "{{ nextcloud_container_name }}"
           - "{{ dashy_container_name }}"
           - "{{ adguardhome_container_name }}"
+          - "{{ portainer_container_name }}"
           - "{{ traefik_container_name }}"
       tags:
         - proxy

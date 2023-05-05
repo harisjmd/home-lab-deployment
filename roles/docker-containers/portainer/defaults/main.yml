@@ -1,0 +1,5 @@
+service_name: portainer
+portainer_container_name: portainer
+portainer_http_port: 9000
+portainer_dirs:
+  - data
