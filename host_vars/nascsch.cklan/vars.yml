@@ -49,6 +49,7 @@ traefik_cf_email: "{{ vault_traefik_cf_email }}"
 traefik_cf_dns_api_token: "{{ vault_traefik_cf_dns_api_token }}"
 traefik_serv_hassio_url: "http://{{ vault_hassio_ip }}:{{ vault_hassio_port }}"
 traefik_serv_omv_url: "http://{{ vault_nas_ip }}:{{ omv_port }}"
+traefik_serv_adguardhome1_url: "http://{{ vault_ckaccess_ip }}:{{ adguard1_http_port }}"
 traefik_serv_src_ips: "127.0.0.1/32,{{ local_subnet }},{{ nas_proxy_net_ip_range }},{{ wireguard_subnet }}"
 traefik_auth: "{{ vault_traefik_auth }}"
 

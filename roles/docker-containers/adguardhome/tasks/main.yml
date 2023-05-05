@@ -33,7 +33,7 @@
     image: "adguard/adguardhome:v0.107.29"
     hostname: "{{ adguardhome_container_name }}"
     pull: true
-    restart_policy: "unless-stopped"
+    restart_policy: "always"
     state: started
     ports:
       - "{{ adguard_http_port }}:80"
