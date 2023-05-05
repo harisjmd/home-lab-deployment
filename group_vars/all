@@ -34,6 +34,7 @@ portainer_agent_port: "{{ vault_portainer_agent_port }}"
 # dns
 adguard_user: "{{ vault_adguard_user }}"
 adguard_password: "{{ vault_adguard_password }}"
+adguard1_http_port: "{{ vault_adguard_http_port }}"
 
 # wireguard
 wireguard_subnet: "{{ vault_wireguard_subnet }}"

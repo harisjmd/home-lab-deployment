@@ -12,7 +12,7 @@ http:
         - websecure
       middlewares:
         - omv-ipwhitelist
-        - omv-redirect
+        - https-redirect
       service: omv
       rule: Host(`{{ omv_fqdn }}`)
       tls:
@@ -23,9 +23,19 @@ http:
         - websecure
       middlewares:
         - omv-ipwhitelist
-        - omv-redirect
+        - https-redirect
       service: api@internal
       rule: Host(`{{ traefik_fqdn }}`)
+      tls:
+        certresolver: cloudflared
+    adguardhome1:
+      entryPoints:
+        - websecure
+      service: adguardhome1
+      middlewares:
+        - https-redirect
+        - adguard-ipwhitelist@docker
+      rule: Host(`{{ adguard1_fqdn }}`)
       tls:
         certresolver: cloudflared
 
@@ -33,7 +43,7 @@ http:
     omv-ipwhitelist:
       ipwhitelist:
         sourcerange: {{ traefik_serv_src_ips }}
-    omv-redirect:
+    https-redirect:
       redirectscheme:
         permanent: true
         scheme: https
@@ -51,4 +61,9 @@ http:
       loadBalancer:
         servers:
           - url: {{ traefik_serv_omv_url }}
+    adguardhome1:
+      loadBalancer:
+          servers:
+            - url: {{ traefik_serv_adguardhome1_url }}
+      
     
