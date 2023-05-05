@@ -29,6 +29,8 @@ adguard2_fqdn: "{{ vault_adguard2_fqdn }}"
 dashy_fqdn: "{{ vault_dashy_fqdn }}"
 omv_fqdn: "{{ vault_omv_fqdn }}"
 hassio_fqdn: "{{ vault_hassio_fqdn }}"
+portainer_fqdn: "{{ vault_portainer_fqdn }}"
+
 portainer_agent_port: "{{ vault_portainer_agent_port }}"
 
 # dns

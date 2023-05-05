@@ -18,6 +18,7 @@ vault_dashy_fqdn: "d.{{ vault_external_domain }}"
 vault_omv_fqdn: "o.{{ vault_external_domain }}"
 vault_hassio_fqdn: "h.{{ vault_external_domain }}"
 vault_wireguard_fqdn: "w.{{ vault_external_domain }}"
+vault_portainer_fqdn: "p.{{ vault_external_domain }}"
 
 ## hassio ##
 vault_hassio_ip: "someip"
