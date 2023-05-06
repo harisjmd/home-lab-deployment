@@ -32,6 +32,7 @@ hassio_fqdn: "{{ vault_hassio_fqdn }}"
 portainer_fqdn: "{{ vault_portainer_fqdn }}"
 wireguard_fqdn: "{{ vault_wireguard_fqdn }}"
 
+
 portainer_agent_port: "{{ vault_portainer_agent_port }}"
 
 # dns
