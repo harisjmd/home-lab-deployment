@@ -1,0 +1,32 @@
+---
+- name: Create directories for Portainer
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ portainer_container_name }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ portainer_dirs }}"
+
+- name: Deploy Portainer Web UI
+  docker_container:
+    name: "{{ portainer_container_name }}"
+    image: "portainer/portainer-ce:latest"
+    hostname: "{{ portainer_container_name }}"
+    pull: true
+    state: started
+    ports:
+      - "{{ portainer_http_port }}:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ portainer_container_name }}/data:/data"
+    restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.portainer-ipwhitelist.ipwhitelist.sourcerange: "{{ traefik_serv_src_ips }}"
+      traefik.http.routers.portainer.entrypoints: "websecure"
+      traefik.http.routers.portainer.middlewares: "portainer-ipwhitelist"
+      traefik.http.routers.portainer.rule: Host(`{{ portainer_fqdn }}`)
+      traefik.http.routers.portainer.service: "portainer"
+      traefik.http.routers.portainer.tls: "true"
+      traefik.http.routers.portainer.tls.certresolver: "cloudflared"
+      traefik.http.services.portainer.loadbalancer.server.port: "9000"

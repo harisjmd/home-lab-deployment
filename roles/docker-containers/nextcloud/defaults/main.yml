@@ -11,6 +11,7 @@ nextcloud_mysql_pass: "{{ vault_nextcloud_mysql_pass }}"
 nextcloud_mysql_db: "{{ vault_nextcloud_mysql_db }}"
 nextcloud_mysql_user: "{{ vault_nextcloud_mysql_user }}"
 nextcloud_trusted_proxies: "{{ vault_nextcloud_trusted_proxies }}"
+nextcloud_data_dir: "{{ vault_nextcloud_data_dir }}"
 
 nextcloud_dirs:
   - html

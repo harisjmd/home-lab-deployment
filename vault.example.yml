@@ -1,0 +1,84 @@
+## global ##
+vault_local_gateway_ip: "192.168.20.254"
+vault_local_dns: "{{ vault_local_gateway_ip }}"
+vault_local_domain: "somedomain"
+vault_local_subnet: "192.168.20.0/24"
+vault_local_ap_ip: "192.168.20.1"
+vault_local_tp_ap_ip: "somedomain"
+vault_local_isp_router_ip: "192.168.100.254"
+vault_local_printer_ip: "somedomain"
+vault_local_wled_ip: "someip"
+vault_local_proxy_ip: "someip"
+
+vault_external_domain: "someddns"
+
+vault_traefik_fqdn: "t.{{ vault_external_domain }}"
+vault_nextcloud_fqdn: "n.{{ vault_external_domain }}"
+vault_dashy_fqdn: "d.{{ vault_external_domain }}"
+vault_omv_fqdn: "o.{{ vault_external_domain }}"
+vault_hassio_fqdn: "h.{{ vault_external_domain }}"
+vault_wireguard_fqdn: "w.{{ vault_external_domain }}"
+vault_portainer_fqdn: "p.{{ vault_external_domain }}"
+
+## hassio ##
+vault_hassio_ip: "someip"
+vault_hassio_port: "80"
+vault_hassio_hostname: "somehostname"
+
+## ckaccess ##
+vault_ckaccess_ip: "someip"
+vault_ckaccess_hostname: "somedomain"
+
+## nas ##
+vault_nas_ip: "someip"
+vault_nas_hostname: "somehostname"
+vault_nas_proxy_net_ip_range: "111.111.111.0/24"
+
+# wireguard
+vault_wireguard_subnet: "111.111.111.0/24"
+vault_vpn_net: "{{ vault_wireguard_subnet }}"
+vault_vpn_allowed_ips: "0.0.0.0/0, ::0/0"
+vault_vpn_server_ip: "{{ vault_nas_ip }}"
+vault_vpn_local_gw: "{{ vault_local_gateway_ip }}"
+vault_vpn_user: "someuser"
+vault_vpn_port: "someport"
+vault_vpn_dns_1: "{{ vault_nas_ip }}"
+vault_vpn_dns_2: "1.1.1.1"
+
+# portainer
+vault_portainer_agent_port: "someport"
+
+# nextcloud
+vault_nextcloud_subnet: "111.111.111.0/24"
+vault_nextcloud_ip: "111.111.111.10"
+vault_nextcloud_group_user_id: "0"
+vault_nextcloud_user_id: "0"
+vault_nextcloud_mysql_root_pass: "somepass"
+vault_nextcloud_mysql_pass: "somepass"
+vault_nextcloud_mysql_db: nextcloud
+vault_nextcloud_mysql_user: someuser
+vault_nextcloud_data_dir: "/tmp/somedir"
+
+# traefik
+vault_traefik_cf_email: "someemail"
+vault_traefik_cf_dns_api_token: "pass"
+vault_traefik_auth: "user:pass"
+
+# omv
+vault_omv_port: 80
+
+# cloudflared
+vault_cloudflared_ddns_api_key: "somepass"
+vault_cloudflared_ddns_subdomain: "any"
+
+# adguard
+vault_adguard_user: "someuser"
+vault_adguard_password: "somepass"
+vault_adguard_http_port: 80
+vault_adguard_https_port: 443
+vault_adguard1_fqdn: "a1.{{ vault_external_domain }}"
+vault_adguard2_fqdn: "a2.{{ vault_external_domain }}"
+
+# plex
+vault_plex_claim: "somepass"
+vault_plex_media_root_dir: "/tmp/somedir"
