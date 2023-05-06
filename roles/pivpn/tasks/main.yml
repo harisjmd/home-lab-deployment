@@ -1,0 +1,71 @@
+---
+- name: Create vpn group
+  become: true
+  ansible.builtin.group:
+    name: "{{ vpn_user }}"
+    state: present
+
+- name: Create vpn user
+  become: true
+  ansible.builtin.user:
+    name: "{{ vpn_user }}"
+    home: "/home/{{ vpn_user }}"
+    state: present
+    umask: "750"
+    password: "{{ vpn_user_pass }}"
+    create_home: true
+    groups:
+      - "{{ vpn_user }}"
+
+- name: Chown vpn user home
+  ansible.builtin.file:
+    recurse: true
+    path: "/home/{{ vpn_user }}"
+    owner: "{{ vpn_user }}"
+    group: "{{ vpn_user }}"
+    state: directory
+    mode: "754"
+
+- name: Clone PiVpn
+  become_user: "{{ vpn_user }}"
+  ansible.builtin.git:
+    repo: "{{ vpn_git }}"
+    dest: "/home/{{ vpn_user }}/pivpn"
+    version: master
+    force: true
+  register: git_clone
+
+- name: Make installer script executable
+  ansible.builtin.file:
+    path: "/home/{{ vpn_user }}/pivpn/auto_install/install.sh"
+    mode: "700"
+    owner: "{{ vpn_user }}"
+    group: "{{ vpn_user }}"
+  when: git_clone is succeeded
+
+- name: Create options.conf file
+  ansible.builtin.template:
+    backup: true
+    src: "options.conf.j2"
+    dest: "{{ vpn_pivpn_options_file }}"
+    mode: "700"
+    owner: "{{ vpn_user }}"
+    group: "{{ vpn_user }}"
+
+- name: Execute PiVPN installer
+  become: true
+  ansible.builtin.shell:
+    executable: "/bin/bash"
+    chdir: "/home/{{ vpn_user }}"
+    creates: "/etc/pivpn/{{ vpn_server_sel }}/setupVars.conf"
+    cmd: "pivpn/auto_install/install.sh --unattended {{ vpn_pivpn_options_file }}"
+  when: git_clone is succeeded
+  register: pivpn_install
+
+- name: Create Client Configs
+  ansible.builtin.shell:
+    executable: "/bin/bash"
+    cmd: "/usr/local/bin/pivpn add -n {{ item }}"
+    creates: "/home/{{ vpn_user }}/configs/{{ item }}.conf"
+  loop: "{{ vpn_clients }}"
+  when: pivpn_install is succeeded

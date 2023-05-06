@@ -30,6 +30,7 @@ dashy_fqdn: "{{ vault_dashy_fqdn }}"
 omv_fqdn: "{{ vault_omv_fqdn }}"
 hassio_fqdn: "{{ vault_hassio_fqdn }}"
 portainer_fqdn: "{{ vault_portainer_fqdn }}"
+wireguard_fqdn: "{{ vault_wireguard_fqdn }}"
 
 portainer_agent_port: "{{ vault_portainer_agent_port }}"
 
@@ -44,3 +45,17 @@ wireguard_subnet: "{{ vault_wireguard_subnet }}"
 # proxy
 nas_proxy_net_ip_range: "{{ vault_nas_proxy_net_ip_range }}"
 traefik_serv_src_ips: "127.0.0.1/32,{{ local_subnet }},{{ nas_proxy_net_ip_range }},{{ wireguard_subnet }}"
+
+# vpn
+vpn_net: "{{ vault_vpn_net }}"
+vpn_fqdn: "{{ wireguard_fqdn }}"
+vpn_allowed_ips: "{{ vault_vpn_allowed_ips }}"
+vpn_server_ip: "{{ vault_vpn_server_ip }}"
+vpn_local_gw: "{{ vault_vpn_local_gw }}"
+vpn_user: "{{ vault_vpn_user }}"
+vpn_user_pass: "{{ vault_vpn_user_pass }}"
+vpn_server_sel: "wireguard"
+vpn_port: "{{ vault_vpn_port }}"
+vpn_dns_1: "{{ vault_vpn_dns_1 }}"
+vpn_dns_2: "{{ vault_vpn_dns_2 }}"
+vpn_clients: "{{ vault_vpn_clients }}"
