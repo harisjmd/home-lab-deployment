@@ -41,6 +41,9 @@ vault_vpn_allowed_ips: "0.0.0.0/0, ::0/0"
 vault_vpn_server_ip: "{{ vault_nas_ip }}"
 vault_vpn_local_gw: "{{ vault_local_gateway_ip }}"
 vault_vpn_user: "someuser"
+vault_vpn_user_pass: "somepass"
+vault_vpn_clients:
+  - test
 vault_vpn_port: "someport"
 vault_vpn_dns_1: "{{ vault_nas_ip }}"
 vault_vpn_dns_2: "1.1.1.1"

@@ -76,3 +76,18 @@
   become: true
   roles:
     - role: homeassistant
+
+#######
+# VPN #
+#######
+
+- name: Install VPN
+  hosts: vpn
+  gather_facts: false
+  become: true
+  vars_files:
+    - ./secret.yml
+  roles:
+    - role: pivpn
+  tags:
+    - vpn

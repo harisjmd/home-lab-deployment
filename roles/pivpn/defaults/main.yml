@@ -1,0 +1,10 @@
+vpn_user: "pi"
+vpn_server_sel: "wireguard"
+vpn_port: "51820"
+vpn_dns_1: "1.1.1.1"
+vpn_dns_2: "1.1.1.1"
+vpn_clients:
+  - test
+vpn_dir: "/opt/pivpn"
+vpn_git: "https://github.com/pivpn/pivpn.git"
+vpn_pivpn_options_file: "/home/{{ vpn_user }}/options.conf"
