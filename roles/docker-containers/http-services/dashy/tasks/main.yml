@@ -19,6 +19,8 @@
     hostname: "{{ dashy_container_name }}"
     pull: true
     state: started
+    dns_servers:
+      - "{{ vault_ckaccess_ip }}"
     env:
       "NODE_ENV": "production"
     labels:

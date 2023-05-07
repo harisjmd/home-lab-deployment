@@ -58,12 +58,25 @@
             subnet: "{{ nas_proxy_net_ip_range }}"
         ipam_driver: default
         name: "{{ nas_proxy_net }}"
+        state: present
         connected:
           - "{{ nextcloud_container_name }}"
           - "{{ dashy_container_name }}"
           - "{{ adguardhome_container_name }}"
           - "{{ portainer_container_name }}"
           - "{{ traefik_container_name }}"
+      tags:
+        - proxy
+    - name: Remove http-services from bridge
+      ansible.builtin.shell:
+        executable: "/bin/bash"
+        cmd: "docker network disconnect -f bridge {{ item }}"
+      loop:
+        - "{{ nextcloud_container_name }}"
+        - "{{ dashy_container_name }}"
+        - "{{ adguardhome_container_name }}"
+        - "{{ portainer_container_name }}"
+        - "{{ traefik_container_name }}"
       tags:
         - proxy
 ############

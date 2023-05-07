@@ -7,6 +7,7 @@ vault_local_ap_ip: "192.168.20.1"
 vault_local_tp_ap_ip: "somedomain"
 vault_local_isp_router_ip: "192.168.100.254"
 vault_local_printer_ip: "somedomain"
+local_hp_printer_ip: "someip"
 vault_local_wled_ip: "someip"
 vault_local_proxy_ip: "someip"
 

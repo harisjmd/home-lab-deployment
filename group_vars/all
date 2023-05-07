@@ -10,6 +10,7 @@ local_ap_ip: "{{ vault_local_ap_ip }}"
 local_tp_ap_ip: "{{ vault_local_tp_ap_ip }}"
 local_isp_router_ip: "{{ vault_local_isp_router_ip }}"
 local_printer_ip: "{{ vault_local_printer_ip }}"
+local_hp_printer_ip: "{{ vault_local_hp_printer_ip }}"
 local_wled_ip: "{{ vault_local_wled_ip }}"
 local_proxy_ip: "{{ vault_local_proxy_ip }}"
 external_domain: "{{ vault_external_domain }}"
@@ -31,7 +32,6 @@ omv_fqdn: "{{ vault_omv_fqdn }}"
 hassio_fqdn: "{{ vault_hassio_fqdn }}"
 portainer_fqdn: "{{ vault_portainer_fqdn }}"
 wireguard_fqdn: "{{ vault_wireguard_fqdn }}"
-
 
 portainer_agent_port: "{{ vault_portainer_agent_port }}"
 
