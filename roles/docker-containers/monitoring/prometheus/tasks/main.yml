@@ -1,0 +1,39 @@
+---
+- name: Create directories for Prometheus
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ prometheus_container_name }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ prometheus_dirs }}"
+
+- name: Deploy Configuration file prometheus.yml
+  become: true
+  ansible.builtin.template:
+    backup: true
+    src: "prometheus.yml.j2"
+    dest: "{{ docker_data_dir }}/{{ service_name }}/{{ prometheus_container_name }}/config/prometheus.yml"
+    mode: "0755"
+
+- name: Deploy Prometheus
+  docker_container:
+    name: "{{ prometheus_container_name }}"
+    image: "prom/prometheus:v2.43.0"
+    hostname: "{{ prometheus_container_name }}"
+    pull: true
+    restart_policy: "unless-stopped"
+    state: started
+    expose:
+      - "{{ prometheus_port }}"
+    volumes:
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ prometheus_container_name }}/config:/etc/prometheus"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ prometheus_container_name }}/data:/prometheus"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=200h"
+      - "--web.enable-lifecycle"
+    labels:
+      org.label-schema.group: "monitoring"

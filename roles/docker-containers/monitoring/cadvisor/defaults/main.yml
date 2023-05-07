@@ -1,0 +1,3 @@
+service_name: cadvisor
+cadvisor_container_name: cadvisor
+cadvisor_port: 8080
