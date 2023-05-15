@@ -56,3 +56,17 @@ traefik_auth: "{{ vault_traefik_auth }}"
 # plex
 plex_claim: "{{ vault_plex_claim }}"
 plex_media_root_dir: "{{ vault_plex_media_root_dir }}"
+
+# grafana
+grafana_src_prometheus_host: "{{ prometheus_container_name }}"
+grafana_src_prometheus_port: "{{ vault_prometheus_port }}"
+
+# cadvisor
+cadvisor_mode: "local"
+cadvisor_port: "8080"
+remote_cadvisor_port: "{{ vault_cadvisor_port }}"
+
+# nodeexporter
+nodeexporter_mode: "local"
+nodeexporter_port: "9100"
+remote_nodeexporter_port: "{{ vault_nodeexporter_port }}"

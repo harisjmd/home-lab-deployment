@@ -5,6 +5,7 @@
     path: "{{ docker_data_dir }}/{{ service_name }}/{{ prometheus_container_name }}/{{ item }}"
     state: directory
     mode: "0755"
+    owner: "nobody"
   loop: "{{ prometheus_dirs }}"
 
 - name: Deploy Configuration file prometheus.yml
@@ -14,6 +15,7 @@
     src: "prometheus.yml.j2"
     dest: "{{ docker_data_dir }}/{{ service_name }}/{{ prometheus_container_name }}/config/prometheus.yml"
     mode: "0755"
+    owner: "nobody"
 
 - name: Deploy Prometheus
   docker_container:
@@ -23,6 +25,7 @@
     pull: true
     restart_policy: "unless-stopped"
     state: started
+    restart: true
     expose:
       - "{{ prometheus_port }}"
     volumes:
@@ -37,3 +40,12 @@
       - "--web.enable-lifecycle"
     labels:
       org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.http.routers.prometheus.entrypoints: "websecure"
+      traefik.http.routers.prometheus.middlewares: "adguard-ipwhitelist@docker"
+      traefik.http.routers.prometheus.rule: Host(`{{ prometheus_fqdn }}`)
+      traefik.http.routers.prometheus.service: "prometheus"
+      traefik.http.routers.prometheus.tls: "true"
+      traefik.http.routers.prometheus.tls.certresolver: "cloudflared"
+      traefik.http.services.prometheus.loadbalancer.server.port: "9090"
+  when: prometheus_mode == "local"

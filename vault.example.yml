@@ -20,6 +20,8 @@ vault_omv_fqdn: "o.{{ vault_external_domain }}"
 vault_hassio_fqdn: "h.{{ vault_external_domain }}"
 vault_wireguard_fqdn: "w.{{ vault_external_domain }}"
 vault_portainer_fqdn: "p.{{ vault_external_domain }}"
+vault_grafana_fqdn: "g.{{ vault_external_domain }}"
+vault_prometheus_fqdn: "pr.{{ vault_external_domain }}"
 
 ## hassio ##
 vault_hassio_ip: "someip"
@@ -86,3 +88,12 @@ vault_adguard2_fqdn: "a2.{{ vault_external_domain }}"
 # plex
 vault_plex_claim: "somepass"
 vault_plex_media_root_dir: "/tmp/somedir"
+
+# monitoring
+vault_monitoring_net_ip_range: "222.222.222.0/24"
+vault_monitoring_net: "somename"
+vault_cadvisor_port: "someport"
+vault_nodeexporter_port: "someport"
+
+# prometheus
+vault_prometheus_port: "someport"

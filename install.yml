@@ -104,3 +104,72 @@
     - role: pivpn
   tags:
     - vpn
+
+##############
+# Monitoring #
+##############
+
+- name: Install Monitoring Exporters
+  hosts: mon
+  become: true
+  tags:
+    - monitoring
+    - test
+  collections:
+    - community.docker
+  gather_facts: false
+  vars_files:
+    - ./secret.yml
+  roles:
+    - role: docker-containers/monitoring/cadvisor
+    - role: docker-containers/monitoring/nodeexporter
+
+- name: Install Monitoring Base
+  hosts: nas
+  become: true
+  tags:
+    - monitoring
+  collections:
+    - community.docker
+  gather_facts: false
+  vars_files:
+    - ./secret.yml
+  roles:
+    - role: docker-containers/monitoring/cadvisor
+    - role: docker-containers/monitoring/nodeexporter
+    - role: docker-containers/monitoring/prometheus
+    - role: docker-containers/monitoring/grafana
+  post_tasks:
+    - name: Create network for monitoring
+      community.docker.docker_network:
+        enable_ipv6: false
+        driver: bridge
+        ipam_config:
+          - iprange: "{{ monitoring_net_ip_range }}"
+            subnet: "{{ monitoring_net_ip_range }}"
+        ipam_driver: default
+        name: "{{ monitoring_net }}"
+        state: present
+        connected:
+          - "{{ cadvisor_container_name }}"
+          - "{{ nodeexporter_container_name }}"
+          - "{{ prometheus_container_name }}"
+          - "{{ grafana_container_name }}"
+
+    - name: Add required monitoring services through proxy
+      community.docker.docker_network:
+        name: "{{ nas_proxy_net }}"
+        connected:
+          - "{{ prometheus_container_name }}"
+          - "{{ grafana_container_name }}"
+        appends: true
+
+    - name: Remove http-services from bridge
+      ansible.builtin.shell:
+        executable: "/bin/bash"
+        cmd: "docker network disconnect -f bridge {{ item }}"
+      loop:
+        - "{{ cadvisor_container_name }}"
+        - "{{ nodeexporter_container_name }}"
+        - "{{ prometheus_container_name }}"
+        - "{{ grafana_container_name }}"

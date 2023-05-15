@@ -9,10 +9,52 @@
     state: started
     devices:
       - "/dev/kmsg:/dev/kmsg"
+    command:
+      - "--docker_only=true"
+      - "--housekeeping_interval=30s"
+      - "--disable_metrics=tcp,udp,percpu,sched,hugetlb,resctrl,advtcp,referenced_memory"
+      - "--disable_root_cgroup_stats=false"
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
       - "/sys:/sys:ro"
-      - "/var/lib/docker:/var/lib/docker:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
+      - "/cgroup:/cgroup:ro"
     labels:
       org.label-schema.group: "monitoring"
+  when: cadvisor_mode == "local"
+
+- name: Deploy Remote cAdvisor
+  docker_container:
+    name: "{{ cadvisor_container_name }}"
+    image: "gcr.io/cadvisor/cadvisor:v0.47.0"
+    privileged: true
+    hostname: "{{ cadvisor_container_name }}"
+    pull: true
+    restart_policy: "unless-stopped"
+    state: started
+    ports:
+      - "{{ cadvisor_port }}:8080"
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    command:
+      - "--docker_only=true"
+      - "--housekeeping_interval=30s"
+      # - "--disable_metrics=accelerator,cpu_topology,disk,memory_numa,tcp,udp,percpu,sched,process,hugetlb,referenced_memory,resctrl,cpuset,advtcp,memory_numa"
+      - "--disable_metrics=tcp,udp,percpu,sched,hugetlb,resctrl,advtcp,referenced_memory"
+      - "--disable_root_cgroup_stats=false"
+    # command:
+    # - "--disable_root_cgroup_stats=false"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
+      - "/cgroup:/cgroup:ro"
+    labels:
+      org.label-schema.group: "monitoring"
+  when: cadvisor_mode == "remote"

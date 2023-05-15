@@ -1,6 +1,7 @@
 service_name: prometheus
 prometheus_container_name: prometheus
 prometheus_port: 9090
+prometheus_mode: local
 prometheus_dirs:
   - data
   - config

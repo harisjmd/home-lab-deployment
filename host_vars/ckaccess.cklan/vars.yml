@@ -21,3 +21,9 @@ gpu_mem: 32
 adguard_http_port: "{{ vault_adguard_http_port }}"
 adguard_https_port: "{{ vault_adguard_https_port }}"
 adguard_fqdn: "{{ vault_adguard1_fqdn }}"
+
+# cadvisor
+cadvisor_mode: "remote"
+
+# nodeexporter
+nodeexporter_mode: "remote"

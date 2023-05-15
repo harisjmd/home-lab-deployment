@@ -1,3 +1,4 @@
 service_name: cadvisor
 cadvisor_container_name: cadvisor
+cadvisor_mode: local
 cadvisor_port: 8080

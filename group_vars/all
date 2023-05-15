@@ -32,6 +32,8 @@ omv_fqdn: "{{ vault_omv_fqdn }}"
 hassio_fqdn: "{{ vault_hassio_fqdn }}"
 portainer_fqdn: "{{ vault_portainer_fqdn }}"
 wireguard_fqdn: "{{ vault_wireguard_fqdn }}"
+grafana_fqdn: "{{ vault_grafana_fqdn }}"
+prometheus_fqdn: "{{ vault_prometheus_fqdn }}"
 
 portainer_agent_port: "{{ vault_portainer_agent_port }}"
 
@@ -60,3 +62,9 @@ vpn_port: "{{ vault_vpn_port }}"
 vpn_dns_1: "{{ vault_vpn_dns_1 }}"
 vpn_dns_2: "{{ vault_vpn_dns_2 }}"
 vpn_clients: "{{ vault_vpn_clients }}"
+
+# monitoring
+monitoring_net_ip_range: "{{ vault_monitoring_net_ip_range }}"
+monitoring_net: "{{ vault_monitoring_net }}"
+cadvisor_port: "{{ vault_cadvisor_port }}"
+nodeexporter_port: "{{ vault_nodeexporter_port}}"

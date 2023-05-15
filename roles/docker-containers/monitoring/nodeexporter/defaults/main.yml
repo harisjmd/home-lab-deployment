@@ -1,3 +1,4 @@
 service_name: nodeexporter
 nodeexporter_container_name: nodeexporter
+nodeexporter_mode: "local"
 nodeexporter_port: 9100
