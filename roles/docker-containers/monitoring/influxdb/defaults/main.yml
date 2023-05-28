@@ -1,0 +1,11 @@
+service_name: influxdb
+influxdb_container_name: influxdb
+influxdb_port: 8086
+influxdb_admin_user: admin
+influxdb_admin_pass: admin
+influxdb_organization: org
+influxdb_bucket: default
+influxdb_admin_token: admin
+influxdb_dirs:
+  - data
+  - config

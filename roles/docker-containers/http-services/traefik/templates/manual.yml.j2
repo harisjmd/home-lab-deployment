@@ -7,6 +7,16 @@ http:
       rule: Host(`{{ hassio_fqdn }}`)
       tls:
         certresolver: cloudflared
+    pialert:
+      entryPoints:
+        - websecure
+      middlewares:
+        - omv-ipwhitelist
+        - https-redirect
+      service: pialert
+      rule: Host(`{{ pialert_fqdn }}`)
+      tls:
+        certresolver: cloudflared
     omv:
       entryPoints:
         - websecure
@@ -57,6 +67,11 @@ http:
       loadBalancer:
         servers:
           - url: {{ traefik_serv_hassio_url }}
+    
+    pialert:
+      loadBalancer:
+        servers:
+          - url: {{ traefik_serv_pialert_url }}
     omv:
       loadBalancer:
         servers:

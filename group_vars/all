@@ -34,6 +34,9 @@ portainer_fqdn: "{{ vault_portainer_fqdn }}"
 wireguard_fqdn: "{{ vault_wireguard_fqdn }}"
 grafana_fqdn: "{{ vault_grafana_fqdn }}"
 prometheus_fqdn: "{{ vault_prometheus_fqdn }}"
+influxdb_fqdn: "{{ vault_influxdb_fqdn }}"
+uptimekuma_fqdn: "{{ vault_uptimekuma_fqdn }}"
+pialert_fqdn: "{{ vault_pialert_fqdn }}"
 
 portainer_agent_port: "{{ vault_portainer_agent_port }}"
 
@@ -53,7 +56,6 @@ traefik_serv_src_ips: "127.0.0.1/32,{{ local_subnet }},{{ nas_proxy_net_ip_range
 vpn_net: "{{ vault_vpn_net }}"
 vpn_fqdn: "{{ wireguard_fqdn }}"
 vpn_allowed_ips: "{{ vault_vpn_allowed_ips }}"
-vpn_server_ip: "{{ vault_vpn_server_ip }}"
 vpn_local_gw: "{{ vault_vpn_local_gw }}"
 vpn_user: "{{ vault_vpn_user }}"
 vpn_user_pass: "{{ vault_vpn_user_pass }}"

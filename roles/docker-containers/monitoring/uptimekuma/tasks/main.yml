@@ -1,0 +1,30 @@
+- name: Create directories for uptime-kuma
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ uptimekuma_container_name }}/{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: "1000"
+  loop: "{{ uptimekuma_dirs }}"
+
+- name: Deploy uptime-kuma
+  docker_container:
+    name: "{{ uptimekuma_container_name }}"
+    image: "louislam/uptime-kuma:1"
+    hostname: "{{ uptimekuma_container_name }}"
+    pull: true
+    restart_policy: "always"
+    state: started
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ uptimekuma_container_name }}/data:/app/data"
+    labels:
+      org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.http.routers.uptimekuma.entrypoints: "websecure"
+      traefik.http.routers.uptimekuma.middlewares: "adguard-ipwhitelist@docker"
+      traefik.http.routers.uptimekuma.rule: Host(`{{ uptimekuma_fqdn }}`)
+      traefik.http.routers.uptimekuma.service: "uptimekuma"
+      traefik.http.routers.uptimekuma.tls: "true"
+      traefik.http.routers.uptimekuma.tls.certresolver: "cloudflared"
+      traefik.http.services.uptimekuma.loadbalancer.server.port: "3001"

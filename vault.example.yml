@@ -22,6 +22,9 @@ vault_wireguard_fqdn: "w.{{ vault_external_domain }}"
 vault_portainer_fqdn: "p.{{ vault_external_domain }}"
 vault_grafana_fqdn: "g.{{ vault_external_domain }}"
 vault_prometheus_fqdn: "pr.{{ vault_external_domain }}"
+vault_influxdb_fqdn: "i.{{ vault_external_domain }}"
+vault_uptimekuma_fqdn: "u.{{ vault_external_domain }}"
+vault_pialert_fqdn: "pi.{{ vault_external_domain }}"
 
 ## hassio ##
 vault_hassio_ip: "someip"
@@ -73,6 +76,9 @@ vault_traefik_auth: "user:pass"
 # omv
 vault_omv_port: 80
 
+# pialert
+vault_pialert_port: "9920"
+
 # cloudflared
 vault_cloudflared_ddns_api_key: "somepass"
 vault_cloudflared_ddns_subdomain: "any"
@@ -97,3 +103,11 @@ vault_nodeexporter_port: "someport"
 
 # prometheus
 vault_prometheus_port: "someport"
+
+# influxdb
+vault_influxdb_port: "8086"
+vault_influxdb_admin_user: "admin"
+vault_influxdb_admin_pass: "admin"
+vault_influxdb_organization: "org"
+vault_influxdb_bucket: "default"
+vault_influxdb_admin_token: "admin"

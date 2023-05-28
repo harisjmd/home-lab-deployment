@@ -79,6 +79,7 @@
         - "{{ traefik_container_name }}"
       tags:
         - proxy
+      ignore_errors: true
 ############
 #  HASSIO  #
 ############
@@ -139,6 +140,9 @@
     - role: docker-containers/monitoring/nodeexporter
     - role: docker-containers/monitoring/prometheus
     - role: docker-containers/monitoring/grafana
+    - role: docker-containers/monitoring/influxdb
+    - role: docker-containers/monitoring/uptimekuma
+    - role: docker-containers/monitoring/pialert
   post_tasks:
     - name: Create network for monitoring
       community.docker.docker_network:
@@ -155,6 +159,8 @@
           - "{{ nodeexporter_container_name }}"
           - "{{ prometheus_container_name }}"
           - "{{ grafana_container_name }}"
+          - "{{ influxdb_container_name }}"
+          - "{{ uptimekuma_container_name }}"
 
     - name: Add required monitoring services through proxy
       community.docker.docker_network:
@@ -162,14 +168,27 @@
         connected:
           - "{{ prometheus_container_name }}"
           - "{{ grafana_container_name }}"
+          - "{{ influxdb_container_name }}"
+          - "{{ uptimekuma_container_name }}"
+
+        appends: true
+
+    - name: Add required monitoring services through nextcloud_internal
+      community.docker.docker_network:
+        name: "nextcloud_internal"
+        connected:
+          - "{{ uptimekuma_container_name }}"
         appends: true
 
     - name: Remove http-services from bridge
       ansible.builtin.shell:
         executable: "/bin/bash"
         cmd: "docker network disconnect -f bridge {{ item }}"
+      ignore_errors: true
       loop:
         - "{{ cadvisor_container_name }}"
         - "{{ nodeexporter_container_name }}"
         - "{{ prometheus_container_name }}"
         - "{{ grafana_container_name }}"
+        - "{{ influxdb_container_name }}"
+        - "{{ uptimekuma_container_name }}"

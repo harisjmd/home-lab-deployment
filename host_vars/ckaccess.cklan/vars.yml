@@ -27,3 +27,4 @@ cadvisor_mode: "remote"
 
 # nodeexporter
 nodeexporter_mode: "remote"
+vpn_server_ip: "{{ vault_ckaccess_ip }}"

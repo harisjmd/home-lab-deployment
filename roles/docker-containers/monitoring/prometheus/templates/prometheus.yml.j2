@@ -19,10 +19,10 @@ scrape_configs:
       - targets: ["nodeexporter:{{ nodeexporter_port }}"]
         labels:
           service: "{{ vault_nas_hostname }}"
-      - targets: ["{{ vault_hassio_ip }}:{{ vault_nodeexporter_port }}"]
+      - targets: ["{{ vault_hassio_ip }}:{{ remote_nodeexporter_port }}"]
         labels:
           service: "{{ vault_hassio_hostname }}"
-      - targets: ["{{ vault_ckaccess_ip }}:{{ vault_nodeexporter_port }}"]
+      - targets: ["{{ vault_ckaccess_ip }}:{{ remote_nodeexporter_port }}"]
         labels:
           service: "{{ vault_ckaccess_hostname }}"
 

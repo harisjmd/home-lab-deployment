@@ -1,0 +1,57 @@
+---
+- name: Create directories for influxdb
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ influxdb_container_name }}/{{ item }}"
+    state: directory
+    mode: "755"
+    # owner: "472"
+    # group: "472"
+  loop: "{{ influxdb_dirs }}"
+
+- name: Deploy Configuration file config.yml
+  become: true
+  ansible.builtin.template:
+    backup: true
+    src: "config.yml.j2"
+    dest: "{{ docker_data_dir }}/{{ service_name }}/{{ influxdb_container_name }}/config/config.yml"
+    mode: "755"
+    # owner: "472"
+    # group: "472"
+
+- name: Deploy influxdb
+  docker_container:
+    name: "{{ influxdb_container_name }}"
+    image: "influxdb:2.7.1"
+    hostname: "{{ influxdb_container_name }}"
+    pull: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart_policy: "always"
+    state: started
+    ports:
+      - "{{ influxdb_port }}:8086"
+    volumes:
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ influxdb_container_name }}/data:/var/lib/influxdb2"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ influxdb_container_name }}/config/config.yml:/etc/influxdb2/config.yml"
+    env:
+      "DOCKER_INFLUXDB_INIT_MODE": "setup"
+      "DOCKER_INFLUXDB_INIT_USERNAME": "{{ influxdb_admin_user }}"
+      "DOCKER_INFLUXDB_INIT_PASSWORD": "{{ influxdb_admin_pass }}"
+      "DOCKER_INFLUXDB_INIT_ORG": "{{ influxdb_organization }}"
+      "DOCKER_INFLUXDB_INIT_BUCKET": "{{ influxdb_bucket }}"
+      "DOCKER_INFLUXDB_INIT_ADMIN_TOKEN": "{{ influxdb_admin_token }}"
+    labels:
+      org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.http.routers.influxdb.entrypoints: "websecure"
+      traefik.http.routers.influxdb.middlewares: "adguard-ipwhitelist@docker"
+      traefik.http.routers.influxdb.rule: Host(`{{ influxdb_fqdn }}`)
+      traefik.http.routers.influxdb.service: "influxdb"
+      traefik.http.routers.influxdb.tls: "true"
+      traefik.http.routers.influxdb.tls.certresolver: "cloudflared"
+      traefik.http.services.influxdb.loadbalancer.server.port: "8086"
