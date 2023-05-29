@@ -1,0 +1,4 @@
+service_name: uptimekuma
+uptimekuma_container_name: uptimekuma
+uptimekuma_dirs:
+  - data

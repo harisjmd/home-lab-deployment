@@ -1,0 +1,28 @@
+- name: Create directories for Pi.Alert
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ pialert_container_name }}/{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: "1000"
+    group: "1000"
+    recurse: true
+  loop: "{{ pialert_dirs }}"
+
+- name: Deploy Pi.Alert
+  docker_container:
+    name: "{{ pialert_container_name }}"
+    image: "jokobsk/pi.alert:latest"
+    hostname: "{{ pialert_container_name }}"
+    pull: true
+    restart_policy: "unless-stopped"
+    state: started
+    network_mode: "host"
+    env:
+      "TZ": "{{ common_timezone }}"
+    volumes:
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ pialert_container_name }}/config:/home/pi/pialert/config"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ pialert_container_name }}/db:/home/pi/pialert/db"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ pialert_container_name }}/log:/home/pi/pialert/front/log"
+    labels:
+      org.label-schema.group: "monitoring"

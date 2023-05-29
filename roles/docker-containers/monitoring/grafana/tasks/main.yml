@@ -1,0 +1,48 @@
+---
+- name: Create directories for Grafana
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/{{ service_name }}/{{ grafana_container_name }}/{{ item }}"
+    state: directory
+    mode: "755"
+    owner: "472"
+    group: "472"
+  loop: "{{ grafana_dirs }}"
+
+- name: Deploy Configuration file datasource.yml
+  become: true
+  ansible.builtin.template:
+    backup: true
+    src: "datasource.yml.j2"
+    dest: "{{ docker_data_dir }}/{{ service_name }}/{{ grafana_container_name }}/provisioning/datasources/datasource.yml"
+    mode: "755"
+    owner: "472"
+    group: "472"
+
+- name: Deploy Grafana
+  docker_container:
+    name: "{{ grafana_container_name }}"
+    image: "grafana/grafana:9.5.1-ubuntu"
+    hostname: "{{ grafana_container_name }}"
+    pull: true
+    restart_policy: "unless-stopped"
+    state: started
+    expose:
+      - "{{ grafana_port }}"
+    volumes:
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ grafana_container_name }}/provisioning:/etc/grafana/provisioning"
+      - "{{ docker_data_dir }}/{{ service_name }}/{{ grafana_container_name }}/data:/var/lib/grafana"
+    env:
+      "GF_SECURITY_ADMIN_USER": "{{ grafana_admin_user }}"
+      "GF_SECURITY_ADMIN_PASSWORD": "{{ grafana_admin_pass }}"
+      "GF_USERS_ALLOW_SIGN_UP": "false"
+    labels:
+      org.label-schema.group: "monitoring"
+      traefik.enable: "true"
+      traefik.http.routers.grafana.entrypoints: "websecure"
+      traefik.http.routers.grafana.middlewares: "adguard-ipwhitelist@docker"
+      traefik.http.routers.grafana.rule: Host(`{{ grafana_fqdn }}`)
+      traefik.http.routers.grafana.service: "grafana"
+      traefik.http.routers.grafana.tls: "true"
+      traefik.http.routers.grafana.tls.certresolver: "cloudflared"
+      traefik.http.services.grafana.loadbalancer.server.port: "3000"

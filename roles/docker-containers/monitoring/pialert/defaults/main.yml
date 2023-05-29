@@ -1,0 +1,6 @@
+service_name: pialert
+pialert_container_name: pialert
+pialert_dirs:
+  - config
+  - db
+  - log

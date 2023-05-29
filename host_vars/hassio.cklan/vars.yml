@@ -16,3 +16,9 @@ enable_network_boot_wait: 0
 expand_rootfs: false
 raspi_reboot_timeout: 180
 gpu_mem: 128
+
+# cadvisor
+cadvisor_mode: "remote"
+
+# nodeexporter
+nodeexporter_mode: "remote"

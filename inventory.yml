@@ -17,3 +17,7 @@ all:
     hassio:
       hosts:
         hassio.cklan:
+    mon:
+      hosts:
+        ckaccess.cklan:
+        hassio.cklan:
